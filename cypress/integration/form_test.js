@@ -59,7 +59,6 @@ describe('pizza app', () => {
         pizzaSize().select("large")
         submit().should("not.be.disabled")
         submit().click()
-        cy.get('@https://reqres.in/api/users').should('have.property', 'status', 201)
 
     })
 })
