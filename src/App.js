@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { Route, Link, Switch } from "react-router-dom";
 import Pizza from "./components/Pizza"
 import * as Yup from "yup"
@@ -18,12 +18,13 @@ const initialFormErrors = {
   name:"",
   pizzaSize:"",
 }
+const initialDisabled = true
 const App = () => {
-
 
 
   const [formValues, setFormValues] = useState(initialFormValues)
   const [formErrors, setFormErrors] = useState(initialFormErrors)
+  const [disabled, setDisabled] = useState(initialDisabled) 
   const change = (name, value) => {
     Yup.reach(formSchema, name)
     .validate(value)
@@ -52,12 +53,21 @@ const App = () => {
     postPizza(newPizza);
   }
   const postPizza = newPizza => {
-    axios.post('https://reqres.in/', newPizza)
+    axios.post('https://reqres.in/api/users', newPizza)
     .then((res) => {
       console.log(res.data)
     })
+    .catch((err) => {console.log(err)})
     setFormValues(initialFormValues);
   }
+  
+  useEffect(() => {
+    // 🔥 STEP 9- ADJUST THE STATUS OF `disabled` EVERY TIME `formValues` CHANGES
+    formSchema.isValid(formValues).then((valid) => {
+      setDisabled(!valid)
+    })
+  }, [formValues])
+  
   return (
     <>
 <header>
@@ -70,7 +80,7 @@ const App = () => {
    
       <Switch>
       <Route path="/pizza">
-        <Pizza formValues={formValues} change={change} submit={submit}/>
+        <Pizza formValues={formValues} change={change} submit={submit}  disabled={disabled} errors={formErrors}/>
       </Route>
       <Route path="/">
       </Route>

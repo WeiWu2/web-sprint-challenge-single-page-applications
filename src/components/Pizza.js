@@ -1,7 +1,7 @@
-import React, {useState} from "react";
+import React from "react";
 
 export default function Pizza(props){
-const {formValues, change, submit} = props;
+const {formValues, change, submit, disabled, errors} = props;
 
 const onChange = (evt) => {
     const { name, value, type, checked } = evt.target;
@@ -15,6 +15,11 @@ const onSubmit = (evt) => {
 return (
 <div>
     <form onSubmit={onSubmit}>
+    <div >
+          {/* VALIDATION ERRORS */}
+          <div>{errors.name}</div>
+          <div>{errors.pizzaSize}</div>
+      </div>
         {/* Name Input */}
         <label>
             Name
@@ -78,7 +83,7 @@ return (
         
         </label>
 
-    <button>Add to Order</button>
+    <button id = "submit" disabled={disabled} >Add to Order</button>
     </form>
 </div>
 )
